@@ -3013,6 +3013,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (has_text_relocations) {
     // Fail if app is targeting sdk version > 22
     // TODO (dimitry): remove != __ANDROID_API__ check once http://b/20020312 is fixed
+#ifndef ENABLE_TEXT_RELOCS_SUPPORT
 #if !defined(__i386__) // ffmpeg says that they require text relocations on x86
     if (get_application_target_sdk_version() != __ANDROID_API__
         && get_application_target_sdk_version() > 22) {
@@ -3020,6 +3021,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
       DL_ERR("%s: has text relocations", get_realpath());
       return false;
     }
+#endif
 #endif
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied and all constructors are run.
